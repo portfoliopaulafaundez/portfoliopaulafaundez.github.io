@@ -10,7 +10,7 @@ const active = (p: string) => (path === p ? 'is-active' : undefined);
 ---
 <header class="site-header">
   <a class="logo" href={localePath(lang)}>{site.name}</a>
-  <button class="menu-toggle" aria-expanded="false" aria-controls="nav">{t.menu}</button>
+  <button class="menu-toggle" aria-expanded="false" aria-controls="nav" aria-label={t.menu}><span></span><span></span><span></span></button>
   <nav id="nav" class="nav">
     <div class="dropdown">
       <a href={localePath(lang)} class:list={['nav-link', (path === '' || projects.some((p) => p.slug === path)) && 'is-active']}>{t.work}</a>

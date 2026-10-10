@@ -12,7 +12,7 @@ const [before, name = ''] = t.hello.replace('</em>', '').split('<em>');
 const words = before.trim().split(/\s+/);
 // Proyectos + About para el escenario de "Recent projects"
 const items = [
-  ...projects.map((p) => ({ name: p.data.client, role: p.data.role, href: localePath(lang, p.slug), img: url(p.data.stageImage ?? p.data.cover), pos: p.data.stagePosition ?? p.data.coverPosition ?? 'center', contain: p.slug === 'iberdrola', fitMobile: p.slug === 'bayer', green: p.slug === 'iberdrola' })),
+  ...projects.map((p) => ({ name: p.data.client, role: p.data.role, href: localePath(lang, p.slug), img: url(p.data.stageImage ?? p.data.cover), pos: p.data.stagePosition ?? p.data.coverPosition ?? 'center', contain: p.slug === 'iberdrola' || p.slug === 'bayer', fitMobile: false, green: p.slug === 'iberdrola' })),
   { name: t.about, role: t.aboutTagline, href: localePath(lang, 'about'), img: url('img/paula.jpg'), pos: 'center 30%', contain: false, fitMobile: false, green: false },
 ];
 ---
