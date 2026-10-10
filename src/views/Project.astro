@@ -1,0 +1,73 @@
+---
+import { render } from 'astro:content';
+import sharp from 'sharp';
+import Base from '../layouts/Base.astro';
+import { url } from '../site';
+import { getProjects, localePath, ui, type Lang } from '../i18n';
+
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const t = ui[lang];
+const projects = await getProjects(lang);
+const i = projects.findIndex((p) => p.slug === slug);
+const project = projects[i];
+const prev = projects[(i - 1 + projects.length) % projects.length];
+const next = projects[(i + 1) % projects.length];
+// Gallery images share one row height: each one's flex-grow is its aspect ratio
+const galleryItems = await Promise.all(project.data.gallery.map(async (src) => {
+  const { width = 1, height = 1 } = await sharp(`public/${src}`).metadata();
+  return { src, ratio: width / height };
+}));
+const { title, client, role, company, summary, cover, coverPosition, coverFull, links, videos, gallery } = project.data;
+const { Content } = await render(project);
+---
+<Base lang={lang} path={slug} title={client} description={summary}>
+  <article class="project">
+    <header class="project-head">
+      <p class="eyebrow">{client}</p>
+      <h1>{title}</h1>
+      <p class="role"><span>{t.role}:</span> <em>{role}</em></p>
+      {company && <p class="role"><span>{t.company}:</span> <em>{company}</em></p>}
+    </header>
+    <img class:list={['project-hero', coverFull && 'is-full']} src={url(cover)} alt={title} style={`object-position: ${coverPosition}`} />
+    <div class="project-body reveal">
+      <p class="lead">{summary}</p>
+      <div class="prose"><Content /></div>
+      {links.length > 0 && (
+        <div class="actions">
+          {links.map((l) => <a class="button" href={l.href} target="_blank" rel="noopener">{l.label} <span aria-hidden="true">↗</span></a>)}
+        </div>
+      )}
+    </div>
+    {videos.length > 0 && (
+      <div class="videos reveal">
+        {videos.map((v) => {
+          const id = new URL(v.href).pathname.split('/').pop() || new URL(v.href).searchParams.get('v');
+          return (
+            <figure class="video">
+              {v.thumb ? (
+                <a class="video-frame video-cover" href={v.href} target="_blank" rel="noopener" aria-label={`${v.title}: ${t.watch}`}>
+                  <img src={url(v.thumb)} alt="" loading="lazy" />
+                  <span class="play" aria-hidden="true">▶</span>
+                </a>
+              ) : (
+                <div class="video-frame">
+                  <iframe src={`https://www.youtube-nocookie.com/embed/${id}`} title={v.title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+              )}
+              <figcaption><strong>{v.title}</strong> <a href={v.href} target="_blank" rel="noopener">{t.watch} <span aria-hidden="true">↗</span></a></figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    )}
+    {gallery.length > 0 && (
+      <div class="gallery">{galleryItems.map((g, n) => <img class="reveal" src={url(g.src)} alt={`${title} ${n + 1}`} loading="lazy" style={`flex: ${g.ratio.toFixed(4)} 1 0`} />)}</div>
+    )}
+  </article>
+  <nav class="project-nav">
+    <a href={localePath(lang, prev.slug)}><small>{t.prev}</small>{prev.data.client}</a>
+    <a class="button" href={localePath(lang)}>{t.all}</a>
+    <a href={localePath(lang, next.slug)} class="next"><small>{t.next}</small>{next.data.client}</a>
+  </nav>
+</Base>

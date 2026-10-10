@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../site';
+import { getProjects, localePath, ui, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const projects = await getProjects(lang);
+// Split the greeting so each word and each letter of the name can animate in
+const [before, name = ''] = t.hello.replace('</em>', '').split('<em>');
+const words = before.trim().split(/\s+/);
+// Proyectos + About para el escenario de "Recent projects"
+const items = [
+  ...projects.map((p) => ({ name: p.data.client, role: p.data.role, href: localePath(lang, p.slug), img: url(p.data.stageImage ?? p.data.cover), pos: p.data.stagePosition ?? p.data.coverPosition ?? 'center', contain: p.slug === 'iberdrola', fitMobile: p.slug === 'bayer', green: p.slug === 'iberdrola' })),
+  { name: t.about, role: t.aboutTagline, href: localePath(lang, 'about'), img: url('img/paula.jpg'), pos: 'center 30%', contain: false, fitMobile: false, green: false },
+];
+---
+<Base lang={lang} path="" description={t.intro[0].replace(/<[^>]+>/g, '')}>
+  <section class="hero">
+    <script is:inline>
+      try {
+        if (sessionStorage.getItem('hello-seen')) document.documentElement.classList.add('hello-seen');
+        else sessionStorage.setItem('hello-seen', '1');
+      } catch (e) {}
+    </script>
+    <h1 class="hello" aria-label={t.hello.replace(/<[^>]+>/g, '')}>
+      {words.map((w, i) => <><span class="hello-word" aria-hidden="true"><span style={`--i: ${i}`}>{w}</span></span>{' '}</>)}
+      <em class="hello-name" aria-hidden="true">{[...name].map((c, i) => <span class="ch" style={`--i: ${i}`}>{c}</span>)}</em>
+    </h1>
+    <div class="intro">
+      {t.intro.map((p) => <p set:html={p} />)}
+      <p><strong>{t.clientsLabel}:</strong> {t.clients}</p>
+    </div>
+  </section>
+
+  <section class="milestones reveal">
+    <h2>{t.milestonesTitle}</h2>
+    <ul>{t.milestones.map((m) => <li set:html={m} />)}</ul>
+  </section>
+
+  <section id="work" class="work">
+    <h2>{t.recentProjects}</h2>
+    <div class="stage">
+      <div class="stage-ambient" aria-hidden="true">
+        {items.map((it, i) => <img class:list={['stage-amb', i === 0 && 'is-on']} src={it.img} alt="" loading="lazy" />)}
+      </div>
+      <a class="stage-pics" href={items[0].href} tabindex="-1" aria-hidden="true">
+        {items.map((it, i) => <img class:list={['stage-pic', i === 0 && 'is-on', it.contain && 'is-contain', it.fitMobile && 'is-fit-mobile', it.green && 'is-green']} src={it.img} alt="" loading="lazy" style={`object-position: ${it.pos}`} />)}
+      </a>
+      <ul class="stage-list">
+        {items.map((it, i) => (
+          <li><a class:list={['stage-item', i === 0 && 'is-on']} href={it.href}><span class="stage-n">{String(i + 1).padStart(2, '0')}</span><span class="stage-name">{it.name}</span><span class="stage-role">{it.role}</span></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  <script>
+    // Escenario de proyectos: al pasar el ratón por un nombre se muestra su imagen; sin ratón, rota sola.
+    const stage = document.querySelector<HTMLElement>('.stage');
+    if (stage) {
+      const groups = ['.stage-amb', '.stage-pic', '.stage-item'].map((s) => [...stage.querySelectorAll<HTMLElement>(s)]);
+      const items = groups[2] as HTMLAnchorElement[];
+      const pics = stage.querySelector<HTMLAnchorElement>('.stage-pics')!;
+      let current = 0, paused = false, timer = 0;
+      const show = (n: number) => {
+        current = n;
+        groups.forEach((g) => g.forEach((el, k) => el.classList.toggle('is-on', k === n)));
+        pics.href = items[n].href;
+      };
+      const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (!paused) show((current + 1) % items.length); }, 3500); };
+      items.forEach((a, k) => {
+        a.addEventListener('mouseenter', () => { paused = true; show(k); });
+        a.addEventListener('focus', () => { paused = true; show(k); });
+        // En pantallas táctiles: el primer toque muestra el proyecto, el segundo lo abre.
+        let touchSelect = false;
+        a.addEventListener('pointerdown', (ev) => { touchSelect = ev.pointerType !== 'mouse' && current !== k; });
+        a.addEventListener('click', (ev) => {
+          if (touchSelect) { ev.preventDefault(); touchSelect = false; paused = false; show(k); loop(); }
+        });
+      });
+      stage.addEventListener('mouseleave', () => { paused = false; pics.style.transform = ''; loop(); });
+      stage.addEventListener('mousemove', (ev) => {
+        if (innerWidth <= 760) return;
+        const r = stage.getBoundingClientRect();
+        pics.style.transform = `translate(${((ev.clientX - r.left) / r.width - 0.5) * -16}px, ${((ev.clientY - r.top) / r.height - 0.5) * -12}px) scale(1.03)`;
+      });
+      // Empieza siempre por el primer proyecto (Bayer) cuando el escenario entra en pantalla, y solo entonces rota.
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { paused = false; show(0); if (!still) loop(); }
+        else clearInterval(timer);
+      }, { threshold: 0.3 }).observe(stage);
+    }
+  </script>
+</Base>

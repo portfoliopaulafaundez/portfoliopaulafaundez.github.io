@@ -1,0 +1,13 @@
+---
+import { site } from '../site';
+import { ui, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const t = ui[Astro.props.lang];
+---
+<footer class="site-footer">
+  <p class="footer-cta"><em>{t.contact}</em> <a href={`mailto:${site.email}`}>{site.email}</a></p>
+  <ul class="socials">
+    {site.socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener">{s.label}</a></li>)}
+  </ul>
+  <p class="copy">© {new Date().getFullYear()} {site.name}</p>
+</footer>

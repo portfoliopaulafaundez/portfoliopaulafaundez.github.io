@@ -1,0 +1,38 @@
+---
+import { site } from '../site';
+import { getProjects, languages, localePath, ui, type Lang } from '../i18n';
+
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const t = ui[lang];
+const projects = await getProjects(lang);
+const active = (p: string) => (path === p ? 'is-active' : undefined);
+---
+<header class="site-header">
+  <a class="logo" href={localePath(lang)}>{site.name}</a>
+  <button class="menu-toggle" aria-expanded="false" aria-controls="nav">{t.menu}</button>
+  <nav id="nav" class="nav">
+    <div class="dropdown">
+      <a href={localePath(lang)} class:list={['nav-link', (path === '' || projects.some((p) => p.slug === path)) && 'is-active']}>{t.work}</a>
+      <ul class="dropdown-menu">
+        {projects.map((p) => <li><a href={localePath(lang, p.slug)} class={active(p.slug)}>{p.data.client}</a></li>)}
+      </ul>
+    </div>
+    <a href={localePath(lang, 'about')} class:list={['nav-link', active('about')]}>{t.about}</a>
+    <div class="dropdown lang">
+      <button class="nav-link lang-button" aria-haspopup="true" aria-label={t.language}>{lang.toUpperCase()} <span aria-hidden="true">▾</span></button>
+      <ul class="dropdown-menu">
+        {(Object.keys(languages) as Lang[]).map((l) => (
+          <li><a href={localePath(l, path)} hreflang={l} lang={l} class={l === lang ? 'is-active' : undefined}>{languages[l]}</a></li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+</header>
+<script>
+  const btn = document.querySelector('.menu-toggle');
+  btn?.addEventListener('click', () => {
+    const open = document.body.classList.toggle('menu-open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+</script>

@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, url } from '../site';
+import { ui, type Lang } from '../i18n';
+import { education, experience, hardSkills, languages, softSkills } from '../cv';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const company = (c: string | Record<Lang, string>) => (typeof c === 'string' ? c : c[lang]);
+const month = (d: string) => (lang === 'es' ? d.replace('Jan', 'Ene') : d);
+---
+<Base lang={lang} path="about" title={t.about}>
+  <section class="about">
+    <div class="about-photos">
+      <img src={url('img/paula.jpg')} alt={site.name} />
+      {t.aboutPhotos.map((p) => <img class="reveal" src={url(`img/about/${p.file}.jpg`)} alt={p.alt} loading="lazy" />)}
+    </div>
+    <div class="about-text">
+      <h1 set:html={t.aboutTitle} />
+      <p class="about-highlight" set:html={t.aboutHighlight} />
+      {t.aboutIntro.map((p) => <p class="lead" set:html={p} />)}
+      <p><a class="email" href={`mailto:${site.email}`}>{site.email}</a></p>
+
+      <h2>{t.languages}</h2>
+      <p class="muted">{languages[lang]}</p>
+
+      <h2>{t.experience}</h2>
+      <ul class="cv-list">
+        {experience.map((e) => (
+          <li>
+            <span class="cv-when">{month(e.from)} – {e.to ? month(e.to) : t.present}</span>
+            <span><strong>{e.role}</strong><br /><span class="muted">{company(e.company)}</span><span class="cv-text">{e.text[lang]}</span></span>
+          </li>
+        ))}
+      </ul>
+
+      <h2>{t.education}</h2>
+      <ul class="cv-list">
+        {education.map((e) => (
+          <li>
+            <span class="cv-when">{e.years}</span>
+            <span><strong>{e.title}</strong><br /><span class="muted">{e.place}</span></span>
+          </li>
+        ))}
+      </ul>
+
+
+      <h2>{t.skills}</h2>
+      <div class="skills">
+        <div>
+          <h3>{t.hardSkills}</h3>
+          <ul class="chips">{hardSkills[lang].map((s) => <li>{s}</li>)}</ul>
+        </div>
+        <div>
+          <h3>{t.softSkills}</h3>
+          <ul class="chips">{softSkills[lang].map((s) => <li>{s}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

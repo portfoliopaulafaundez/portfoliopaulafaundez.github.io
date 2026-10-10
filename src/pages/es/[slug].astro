@@ -1,0 +1,9 @@
+---
+import Project from '../../views/Project.astro';
+import { getProjects } from '../../i18n';
+
+export async function getStaticPaths() {
+  return (await getProjects('es')).map((p) => ({ params: { slug: p.slug } }));
+}
+---
+<Project lang="es" slug={Astro.params.slug} />
