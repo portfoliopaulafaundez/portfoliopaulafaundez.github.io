@@ -29,8 +29,9 @@ const items = [
       <em class="hello-name" aria-hidden="true">{[...name].map((c, i) => <span class="ch" style={`--i: ${i}`}>{c}</span>)}</em>
     </h1>
     <div class="intro">
-      {t.intro.map((p) => <p set:html={p} />)}
-      <p><strong>{t.clientsLabel}:</strong> {t.clients}</p>
+      <p class="intro-lead" set:html={t.introLead} />
+      <ul class="intro-points">{t.introPoints.map((p) => <li set:html={p} />)}</ul>
+      <p class="intro-clients"><span>{t.clientsLabel}</span> {t.clients}</p>
     </div>
   </section>
 
