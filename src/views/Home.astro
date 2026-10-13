@@ -34,7 +34,7 @@ const items = [
       <ul class="intro-points">{t.introPoints.map((p) => <li set:html={p} />)}</ul>
     </div>
     <div class="intro-clients">
-      <span class="clients-label">{t.clientsLabel}</span>
+      <h2 class="clients-label">{t.clientsLabel}</h2>
       <div class="clients">
         <button class="clients-nav prev" type="button" aria-hidden="true" tabindex="-1">‹</button>
         <ul class="clients-track" tabindex="0" aria-label={t.clientsLabel}>

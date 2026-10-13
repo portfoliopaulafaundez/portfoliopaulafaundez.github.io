@@ -133,8 +133,8 @@ main p, main li, main h1, main h2 { text-shadow: 0 1px 12px rgba(20, 18, 18, .9)
 .intro-points strong { color: var(--fg); }
 .hero .intro-clients { animation: hello-fade 1s ease 1.8s both; }
 .hello-seen .hero .intro-clients { animation: none; }
-.intro-clients { margin-top: .5rem; min-width: 0; }
-.clients-label { display: block; margin-bottom: 1rem; font: 600 .72rem 'Clarity City', var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); font-weight: 600; }
+.intro-clients { margin-top: 1rem; min-width: 0; }
+.clients-label { margin: 0 0 1.25rem; }
 .clients { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .clients-track { list-style: none; margin: 0; padding: .4rem 0 .6rem; display: flex; gap: 1rem; align-items: center; min-height: 64px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; flex: none; max-width: 100%; }
 .clients-track::-webkit-scrollbar { display: none; }
