@@ -11,7 +11,7 @@ const projects = await getProjects(lang);
 const [before, name = ''] = t.hello.replace('</em>', '').split('<em>');
 const words = before.trim().split(/\s+/);
 // Proyectos + About para el escenario de "Recent projects"
-const clients = [['bayer', 'Bayer'], ['iberdrola', 'Iberdrola'], ['best-arctic', 'Best Arctic'], ['ikea', 'IKEA'], ['mastercard', 'Mastercard'], ['burger-king', 'Burger King'], ['sanofi', 'Sanofi'], ['novartis', 'Novartis'], ['honeywell', 'Honeywell'], ['novocure', 'Novocure'], ['santen', 'Santen'], ['pharmamar', 'PharmaMar'], ['minor-hotels', 'Minor Hotels'], ['dermalogica', 'Dermalogica']];
+const clients = [['bayer', 'Bayer', 46, 46], ['iberdrola', 'Iberdrola', 102, 25], ['best-arctic', 'Best Arctic', 81, 32], ['ikea', 'IKEA', 81, 32], ['mastercard', 'Mastercard', 58, 45], ['burger-king', 'Burger King', 42, 46], ['sanofi', 'Sanofi', 101, 26], ['novartis', 'Novartis', 126, 21], ['honeywell', 'Honeywell', 121, 21], ['novocure', 'Novocure', 133, 20], ['santen', 'Santen', 81, 32], ['pharmamar', 'PharmaMar', 63, 41], ['minor-hotels', 'Minor Hotels', 90, 29], ['dermalogica', 'Dermalogica', 147, 18]] as const;
 const items = [
   ...projects.map((p) => ({ name: p.data.client, role: p.data.role, href: localePath(lang, p.slug), img: url(p.data.stageImage ?? p.data.cover), pos: p.data.stagePosition ?? p.data.coverPosition ?? 'center', contain: p.slug === 'iberdrola' || p.slug === 'bayer', fitMobile: false, green: p.slug === 'iberdrola' })),
   { name: t.about, role: t.aboutTagline, href: localePath(lang, 'about'), img: url('img/paula.jpg'), pos: 'center 30%', contain: false, fitMobile: false, green: false },
@@ -38,7 +38,7 @@ const items = [
       <div class="clients">
         <button class="clients-nav prev" type="button" aria-hidden="true" tabindex="-1">‹</button>
         <ul class="clients-track" tabindex="0" aria-label={t.clientsLabel}>
-          {clients.map(([slug, name]) => <li><img src={url(`img/clients/${slug}.webp`)} alt={name} width="256" height="256" loading="lazy" /></li>)}
+          {clients.map(([slug, name, w, h]) => <li><img src={url(`img/clients/${slug}.png`)} alt={name} width={w} height={h} loading="lazy" /></li>)}
         </ul>
         <button class="clients-nav next" type="button" aria-hidden="true" tabindex="-1">›</button>
       </div>

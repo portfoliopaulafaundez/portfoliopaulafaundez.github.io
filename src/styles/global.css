@@ -136,19 +136,19 @@ main p, main li, main h1, main h2 { text-shadow: 0 1px 12px rgba(20, 18, 18, .9)
 .intro-clients { margin-top: .5rem; }
 .clients-label { display: block; margin-bottom: 1rem; font: 600 .72rem 'Clarity City', var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); font-weight: 600; }
 .clients { position: relative; }
-.clients-track { list-style: none; margin: 0; padding: .4rem 0 .6rem; display: flex; gap: .6rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 3rem), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 3rem), transparent 100%); }
+.clients-track { list-style: none; margin: 0; padding: .4rem 0 .6rem; display: flex; gap: 3rem; align-items: center; min-height: 64px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 3rem), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 3rem, #000 calc(100% - 3rem), transparent 100%); }
 .clients.at-start .clients-track { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 3rem), transparent 100%); mask-image: linear-gradient(90deg, #000 calc(100% - 3rem), transparent 100%); }
 .clients.at-end .clients-track { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3rem); mask-image: linear-gradient(90deg, transparent 0, #000 3rem); }
 .clients-track::-webkit-scrollbar { display: none; }
-.clients-track li { flex: 0 0 auto; scroll-snap-align: start; border-radius: 12px; background: linear-gradient(155deg, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, .74) 55%, rgba(255, 255, 255, .62) 100%); border: 1px solid rgba(255, 255, 255, .45); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 10px 30px -12px rgba(0, 0, 0, .6); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); pointer-events: none; user-select: none; }
-.clients-track img { display: block; width: 68px; height: 68px; -webkit-user-drag: none; }
+.clients-track li { flex: 0 0 auto; display: flex; align-items: center; scroll-snap-align: start; pointer-events: none; user-select: none; }
+.clients-track img { display: block; opacity: .8; -webkit-user-drag: none; }
 .clients-nav { position: absolute; top: 50%; z-index: 1; width: 2.4rem; height: 2.4rem; margin-top: -1.2rem; border: 1px solid rgba(255, 255, 255, .18); border-radius: 50%; background: rgba(28, 26, 26, .7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: var(--fg); font: 400 1.4rem/1 var(--sans); cursor: pointer; transition: opacity .2s, color .2s, border-color .2s; }
 .clients-nav:hover { color: var(--accent); border-color: var(--accent); }
 .clients-nav.prev { left: .35rem; }
 .clients-nav.next { right: .35rem; }
 .clients.at-start .prev, .clients.at-end .next { opacity: 0; pointer-events: none; }
 @media (hover: none) { .clients-nav { display: none; } }
-@media (max-width: 760px) { .clients-track { gap: .5rem; } .clients-track li { border-radius: 10px; } .clients-track img { width: 60px; height: 60px; } }
+@media (max-width: 760px) { .clients-track { gap: 2.2rem; } }
 .milestones { padding: 2rem 0; }
 .milestones ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 4rem; color: var(--muted); counter-reset: m; }
 .milestones li { padding: 1.4rem 0 1.4rem 2.6rem; border-top: 1px solid var(--line); position: relative; counter-increment: m; }
