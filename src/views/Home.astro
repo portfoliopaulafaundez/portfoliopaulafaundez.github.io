@@ -11,6 +11,7 @@ const projects = await getProjects(lang);
 const [before, name = ''] = t.hello.replace('</em>', '').split('<em>');
 const words = before.trim().split(/\s+/);
 // Proyectos + About para el escenario de "Recent projects"
+const clients = [['bayer', 'Bayer'], ['iberdrola', 'Iberdrola'], ['best-arctic', 'Best Arctic'], ['ikea', 'IKEA'], ['mastercard', 'Mastercard'], ['burger-king', 'Burger King'], ['sanofi', 'Sanofi'], ['novartis', 'Novartis'], ['honeywell', 'Honeywell'], ['novocure', 'Novocure'], ['santen', 'Santen'], ['pharmamar', 'PharmaMar'], ['minor-hotels', 'Minor Hotels'], ['dermalogica', 'Dermalogica']];
 const items = [
   ...projects.map((p) => ({ name: p.data.client, role: p.data.role, href: localePath(lang, p.slug), img: url(p.data.stageImage ?? p.data.cover), pos: p.data.stagePosition ?? p.data.coverPosition ?? 'center', contain: p.slug === 'iberdrola' || p.slug === 'bayer', fitMobile: false, green: p.slug === 'iberdrola' })),
   { name: t.about, role: t.aboutTagline, href: localePath(lang, 'about'), img: url('img/paula.jpg'), pos: 'center 30%', contain: false, fitMobile: false, green: false },
@@ -31,7 +32,16 @@ const items = [
     <div class="intro">
       <p class="intro-lead" set:html={t.introLead} />
       <ul class="intro-points">{t.introPoints.map((p) => <li set:html={p} />)}</ul>
-      <p class="intro-clients"><span>{t.clientsLabel}</span> {t.clients}</p>
+      <div class="intro-clients">
+        <span class="clients-label">{t.clientsLabel}</span>
+        <div class="clients">
+          <button class="clients-nav prev" type="button" aria-hidden="true" tabindex="-1">‹</button>
+          <ul class="clients-track" tabindex="0" aria-label={t.clientsLabel}>
+            {clients.map(([slug, name]) => <li><img src={url(`img/clients/${slug}.webp`)} alt={name} width="256" height="256" loading="lazy" /></li>)}
+          </ul>
+          <button class="clients-nav next" type="button" aria-hidden="true" tabindex="-1">›</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -57,6 +67,22 @@ const items = [
     </div>
   </section>
   <script>
+    // Carrusel de clientes: flechas que desplazan la fila y se ocultan en los extremos.
+    const track = document.querySelector<HTMLElement>('.clients-track');
+    if (track) {
+      const box = track.parentElement!;
+      const step = () => track.clientWidth * 0.8;
+      box.querySelector('.prev')?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+      box.querySelector('.next')?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+      const edges = () => {
+        box.classList.toggle('at-start', track.scrollLeft <= 2);
+        box.classList.toggle('at-end', track.scrollLeft + track.clientWidth >= track.scrollWidth - 2);
+      };
+      track.addEventListener('scroll', edges, { passive: true });
+      addEventListener('resize', edges);
+      edges();
+    }
+
     // Escenario de proyectos: al pasar el ratón por un nombre se muestra su imagen; sin ratón, rota sola.
     const stage = document.querySelector<HTMLElement>('.stage');
     if (stage) {
