@@ -32,15 +32,15 @@ const items = [
     <div class="intro">
       <p class="intro-lead" set:html={t.introLead} />
       <ul class="intro-points">{t.introPoints.map((p) => <li set:html={p} />)}</ul>
-      <div class="intro-clients">
-        <span class="clients-label">{t.clientsLabel}</span>
-        <div class="clients">
-          <button class="clients-nav prev" type="button" aria-hidden="true" tabindex="-1">‹</button>
-          <ul class="clients-track" tabindex="0" aria-label={t.clientsLabel}>
-            {clients.map(([slug, name]) => <li><img src={url(`img/clients/${slug}.webp`)} alt={name} width="256" height="256" loading="lazy" /></li>)}
-          </ul>
-          <button class="clients-nav next" type="button" aria-hidden="true" tabindex="-1">›</button>
-        </div>
+    </div>
+    <div class="intro-clients">
+      <span class="clients-label">{t.clientsLabel}</span>
+      <div class="clients">
+        <button class="clients-nav prev" type="button" aria-hidden="true" tabindex="-1">‹</button>
+        <ul class="clients-track" tabindex="0" aria-label={t.clientsLabel}>
+          {clients.map(([slug, name]) => <li><img src={url(`img/clients/${slug}.webp`)} alt={name} width="256" height="256" loading="lazy" /></li>)}
+        </ul>
+        <button class="clients-nav next" type="button" aria-hidden="true" tabindex="-1">›</button>
       </div>
     </div>
   </section>
