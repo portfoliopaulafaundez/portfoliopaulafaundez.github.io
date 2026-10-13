@@ -129,7 +129,7 @@ main p, main li, main h1, main h2 { text-shadow: 0 1px 12px rgba(20, 18, 18, .9)
 .intro-lead { font-size: 1.15rem; line-height: 1.55; }
 .intro-points { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: .55rem; }
 .intro-points li { position: relative; padding-left: 1.4rem; color: var(--muted); }
-.intro-points li::before { content: ''; position: absolute; left: 0; top: .72em; width: .55rem; height: 2px; border-radius: 2px; background: var(--accent); }
+.intro-points li::before { content: ''; position: absolute; left: .25rem; top: .32em; width: .32rem; height: .65rem; border: solid var(--accent); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .intro-points strong { color: var(--fg); }
 .intro-clients { font-size: .9rem; color: var(--muted); }
 .intro-clients span { display: block; margin-bottom: .2rem; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fg); font-weight: 600; }
