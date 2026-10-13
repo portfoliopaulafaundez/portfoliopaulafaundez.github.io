@@ -67,20 +67,37 @@ const items = [
     </div>
   </section>
   <script>
-    // Carrusel de clientes: flechas que desplazan la fila y se ocultan en los extremos.
+    // Carrusel de clientes: la fila muestra un número entero de logos para que nunca quede uno cortado;
+    // las flechas avanzan de página en página y se ocultan en los extremos.
     const track = document.querySelector<HTMLElement>('.clients-track');
     if (track) {
       const box = track.parentElement!;
-      const step = () => track.clientWidth * 0.8;
-      box.querySelector('.prev')?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-      box.querySelector('.next')?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+      const navs = box.querySelectorAll<HTMLElement>('.clients-nav');
+      const slot = () => {
+        const li = track.querySelector('li')!;
+        return li.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0');
+      };
+      // Reparte el ancho disponible entre un número entero de huecos de al menos --slot-min px.
+      const fit = () => {
+        const gap = parseFloat(getComputedStyle(track).columnGap || '0');
+        const min = parseFloat(getComputedStyle(track).getPropertyValue('--slot-min')) || 140;
+        const shown = [...navs].filter((n) => n.offsetParent !== null);
+        const free = box.clientWidth - shown.reduce((w, n) => w + n.getBoundingClientRect().width + 8, 0);
+        const n = Math.max(1, Math.floor((free + gap) / (min + gap)));
+        track.style.setProperty('--slot', `${(free + gap) / n - gap}px`);
+        track.style.width = `${free}px`;
+        edges();
+      };
+      const page = () => Math.max(1, Math.round((track.clientWidth + 1) / slot())) * slot();
+      box.querySelector('.prev')?.addEventListener('click', () => track.scrollBy({ left: -page(), behavior: 'smooth' }));
+      box.querySelector('.next')?.addEventListener('click', () => track.scrollBy({ left: page(), behavior: 'smooth' }));
       const edges = () => {
         box.classList.toggle('at-start', track.scrollLeft <= 2);
         box.classList.toggle('at-end', track.scrollLeft + track.clientWidth >= track.scrollWidth - 2);
       };
       track.addEventListener('scroll', edges, { passive: true });
-      addEventListener('resize', edges);
-      edges();
+      addEventListener('resize', fit);
+      fit();
     }
 
     // Escenario de proyectos: al pasar el ratón por un nombre se muestra su imagen; sin ratón, rota sola.
