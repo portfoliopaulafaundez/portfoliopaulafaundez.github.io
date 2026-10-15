@@ -35,12 +35,10 @@ const items = [
     </div>
     <div class="intro-clients">
       <span class="clients-label">{t.clientsLabel}</span>
-      <div class="clients">
-        <button class="clients-nav prev" type="button" aria-hidden="true" tabindex="-1">‹</button>
-        <ul class="clients-track" tabindex="0" aria-label={t.clientsLabel}>
-          {clients.map(([slug, name, w, h]) => <li><img src={url(`img/clients/${slug}.png`)} alt={name} width={w} height={h} loading="lazy" /></li>)}
+      <div class="clients-band">
+        <ul class="clients-marquee" aria-label={t.clientsLabel}>
+          {[0, 1].map((copy) => clients.map(([slug, name, w, h]) => <li aria-hidden={copy ? 'true' : undefined}><img src={url(`img/clients/${slug}.png`)} alt={copy ? '' : name} width={w} height={h} decoding="async" /></li>))}
         </ul>
-        <button class="clients-nav next" type="button" aria-hidden="true" tabindex="-1">›</button>
       </div>
     </div>
   </section>
@@ -67,39 +65,6 @@ const items = [
     </div>
   </section>
   <script>
-    // Carrusel de clientes: la fila muestra un número entero de logos para que nunca quede uno cortado;
-    // las flechas avanzan de página en página y se ocultan en los extremos.
-    const track = document.querySelector<HTMLElement>('.clients-track');
-    if (track) {
-      const box = track.parentElement!;
-      const navs = box.querySelectorAll<HTMLElement>('.clients-nav');
-      const slot = () => {
-        const li = track.querySelector('li')!;
-        return li.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0');
-      };
-      // Reparte el ancho disponible entre un número entero de huecos de al menos --slot-min px.
-      const fit = () => {
-        const gap = parseFloat(getComputedStyle(track).columnGap || '0');
-        const min = parseFloat(getComputedStyle(track).getPropertyValue('--slot-min')) || 140;
-        const shown = [...navs].filter((n) => n.offsetParent !== null);
-        const free = box.clientWidth - shown.reduce((w, n) => w + n.getBoundingClientRect().width + 8, 0);
-        const n = Math.max(1, Math.floor((free + gap) / (min + gap)));
-        track.style.setProperty('--slot', `${(free + gap) / n - gap}px`);
-        track.style.width = `${free}px`;
-        edges();
-      };
-      const page = () => Math.max(1, Math.round((track.clientWidth + 1) / slot())) * slot();
-      box.querySelector('.prev')?.addEventListener('click', () => track.scrollBy({ left: -page(), behavior: 'smooth' }));
-      box.querySelector('.next')?.addEventListener('click', () => track.scrollBy({ left: page(), behavior: 'smooth' }));
-      const edges = () => {
-        box.classList.toggle('at-start', track.scrollLeft <= 2);
-        box.classList.toggle('at-end', track.scrollLeft + track.clientWidth >= track.scrollWidth - 2);
-      };
-      track.addEventListener('scroll', edges, { passive: true });
-      addEventListener('resize', fit);
-      fit();
-    }
-
     // Escenario de proyectos: al pasar el ratón por un nombre se muestra su imagen; sin ratón, rota sola.
     const stage = document.querySelector<HTMLElement>('.stage');
     if (stage) {
