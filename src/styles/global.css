@@ -140,7 +140,7 @@ main p, main li, main h1, main h2 { text-shadow: 0 1px 12px rgba(20, 18, 18, .9)
 .clients-marquee { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; width: max-content; animation: clients-marquee 45s linear infinite; }
 .clients-band:hover .clients-marquee { animation-play-state: paused; }
 .clients-marquee li { flex: none; padding: 0 2rem; display: flex; align-items: center; pointer-events: none; user-select: none; }
-.clients-marquee img { display: block; -webkit-user-drag: none; filter: drop-shadow(0 0 1px rgba(255, 255, 255, .45)) drop-shadow(0 0 8px rgba(255, 255, 255, .12)); }
+.clients-marquee img { display: block; -webkit-user-drag: none; }
 @keyframes clients-marquee { to { transform: translateX(-50%); } }
 @media (max-width: 760px) { .clients-band { padding: 1.1rem 0; } .clients-marquee { animation-duration: 35s; } .clients-marquee li { padding: 0 1.4rem; } }
 @media (prefers-reduced-motion: reduce) { .clients-band { -webkit-mask-image: none; mask-image: none; } .clients-marquee { animation: none; width: auto; flex-wrap: wrap; justify-content: center; row-gap: 1.2rem; } .clients-marquee li[aria-hidden] { display: none; } }
