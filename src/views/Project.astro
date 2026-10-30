@@ -35,7 +35,7 @@ const { Content } = await render(project);
       <div class="prose"><Content /></div>
       {links.length > 0 && (
         <div class="actions">
-          {links.map((l) => <a class="button" href={l.href} target="_blank" rel="noopener">{l.label} <span aria-hidden="true">↗</span></a>)}
+          {links.map((l) => <a class="button" href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
         </div>
       )}
     </div>
